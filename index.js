@@ -6,6 +6,7 @@ var { Limits } = require("./models/limits");
 var { setLimits } = require("./utility/setLimits.js");
 var schedule = require('node-schedule');
 var fs = require('fs');
+const readLastLines = require('read-last-lines');
 
 
 var cors = require("cors");
@@ -96,8 +97,20 @@ app.get("/checkViolations", async function (req, res) {
 });
 
 
-app.get("/cpuSpecs", async function (req, res) {
+app.get("/specs", async function (req, res) {
+  si.getStaticData()
+    .then(data => {
+      res.send(data);
+    })
+    .catch(error => console.error(error));
+});
 
+app.get("/data", async function (req, res) {
+  var ct = req.params.count;
+  readLastLines.read('log.txt', ct)
+    .then((lines) => {
+      res.send(lines);
+    });
 });
 
 const PORT = 8088;
