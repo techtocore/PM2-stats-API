@@ -66,6 +66,31 @@ app.get("/limits", function (req, res) {
   Limits.find({}, function (err, docs) {
     res.send(docs);
   });
+});
+
+
+app.get("/checkViolations", async function (req, res) {
+  var violations = [];
+  await pm2.list(function (err, processDescriptionList) {
+    Limits.find({}, function (err, docs) {
+      processDescriptionList.forEach(proc => {
+        var tmpJson = {};
+        tmpJson.pid = proc.pid;
+        tmpJson.name = proc.name;
+        tmpJson.cpu = proc.monit.cpu;
+        tmpJson.memory = proc.monit.memory;
+        tmpJson.pm_id = proc.pm_id;
+        docs.forEach(lim => {
+          var param = lim.parameter;
+          if (lim.pm_id === tmpJson.pm_id && tmpJson[param] > lim.threshold) {
+            violations.push(tmpJson);
+            //console.log(tmpJson);
+          }
+        });
+      });
+      res.send(violations);
+    });
+  });
 
 });
 
