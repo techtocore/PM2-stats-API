@@ -3,6 +3,8 @@ var bodyParser = require("body-parser");
 var pm2 = require('pm2');
 var moment = require("moment");
 var { Limits } = require("./models/limits");
+var { setLimits } = require("./utility/setLimits.js");
+
 
 var cors = require("cors");
 var app = express();
@@ -45,6 +47,26 @@ app.get("/list", function (req, res) {
       res.json(json);
     }
   });
+});
+
+app.post("/setLimits", async function (req, res) {
+  var data = req.body;
+  console.log(data);
+  await setLimits(data)
+    .then(ob => {
+      //console.log(ob);
+      res.status(200).send();
+    })
+    .catch(err => {
+      res.status(400).json({ err: err.message });
+    });
+});
+
+app.get("/limits", function (req, res) {
+  Limits.find({}, function (err, docs) {
+    res.send(docs);
+  });
+
 });
 
 const PORT = 8088;

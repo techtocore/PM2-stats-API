@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var LimitSchema = new mongoose.Schema(
   {
-    pid: {
+    pm_id: {
       type: Number,
       required: true,
       trim: true
