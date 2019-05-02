@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/Tjatse/pm2-gui.git"
+    "url": "git://github.com/techtocore/pm2-gui.git"
   },
   "keywords": [
     "monitor",
@@ -25,11 +25,11 @@
     "PM2 monitor"
   ],
   "author": {
-    "name": "Tjatse"
+    "name": "techtocore"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Tjatse/pm2-gui/issues"
+    "url": "https://github.com/techtocore/PM2-monitoring-webUI/issues"
   },
   "engines": [
     "node >= 0.10.0"
@@ -65,5 +65,5 @@
       "action"
     ]
   },
-  "homepage": "https://github.com/Tjatse/pm2-gui"
+  "homepage": "https://github.com/techtocore/PM2-monitoring-webUI"
 }
