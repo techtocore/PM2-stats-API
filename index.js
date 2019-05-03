@@ -6,8 +6,6 @@ var { Limits } = require("./models/limits");
 var { setLimits } = require("./utility/setLimits.js");
 var schedule = require('node-schedule');
 var fs = require('fs');
-const readLastLines = require('read-last-lines');
-
 
 var cors = require("cors");
 var app = express();
@@ -105,12 +103,20 @@ app.get("/specs", async function (req, res) {
     .catch(error => console.error(error));
 });
 
-app.get("/data", async function (req, res) {
-  var ct = req.params.count;
-  readLastLines.read('log.txt', ct)
-    .then((lines) => {
-      res.send(lines);
-    });
+app.get("/data", function (req, res) {
+  //var ct = req.params.count;
+  var arr = fs.readFileSync('log.txt').toString().split("\n");
+  arr.pop();
+  var array = [];
+  arr.forEach(line => {
+    array.push(JSON.parse(line.replace(/\\/g, "")));
+    //array.push(line.replace(/\\/g, '\\'));
+  });
+  var size = Math.min(array.length, 20);
+  var data = array.slice(Math.max(array.length - size, 0));
+  var json = {};
+  json.data = data;
+  res.json(json);
 });
 
 const PORT = 8088;
@@ -157,7 +163,7 @@ var j1 = schedule.scheduleJob('5 * * * * *', function () {
   });
 });
 
-var errStream = fs.createWriteStream('log.txt', { 'flags': 'a' });
+var errStream = fs.createWriteStream('violations.txt', { 'flags': 'a' });
 
 var j2 = schedule.scheduleJob('10 * * * * *', async function () {
   var violations = [];
